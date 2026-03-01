@@ -97,7 +97,11 @@ function MobileStudyPage() {
       {currentKanjiData && (
         <>
           <StudyFlashcard data={currentKanjiData} />
-          <ProgressBar progress={currentIndex / kanjiArr.length} />
+          <ProgressBar
+            // progress={currentIndex / kanjiArr.length}
+            current={currentIndex + 1}
+            total={kanjiArr.length}
+          />
           <NavigateCardButton
             onNext={handleNextCard}
             finish={currentIndex >= kanjiArr.length - 1}
