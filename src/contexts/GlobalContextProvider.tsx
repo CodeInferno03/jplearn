@@ -10,6 +10,10 @@ interface GlobalContextInterface {
   flashcardLevel: string;
   setFlashcardLevel: React.Dispatch<React.SetStateAction<string>>;
   KANJI_API: string;
+  kanjiArr: Array<string | undefined>;
+  setKanjiArr: React.Dispatch<React.SetStateAction<Array<string | undefined>>>;
+  studyCardFlipped: boolean;
+  setStudyCardFlipped: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 interface GlobalContextProviderProps {
@@ -36,19 +40,34 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     storedTheme === "light" || storedTheme === "dark"
       ? storedTheme
       : getSystemTheme();
-  const [theme, setTheme] = React.useState<"light" | "dark">(presetTheme);
+  // const [theme, setTheme] = React.useState<"light" | "dark">(presetTheme);
+  const [theme, setTheme] = React.useState<"light" | "dark">("dark");
   const visualTheme = React.useMemo(() => getTheme(theme), [theme]);
 
   const [flashcardLevel, setFlashcardLevel] = React.useState<string>(
     sessionStorage.getItem("kanjiLevel") ?? "JLPT 5",
   );
   const KANJI_API = "https://kanjiapi.dev/v1";
+  const [kanjiArr, setKanjiArr] = React.useState<Array<string | undefined>>([]);
 
-  const BORDER_COLOR = (theme) => theme === "dark" ? "#8C8C8C" : "#000"
+  const [studyCardFlipped, setStudyCardFlipped] =
+    React.useState<boolean>(false);
+
+  const BORDER_COLOR = (theme) => (theme === "dark" ? "#8C8C8C" : "#000");
 
   return (
     <GlobalContext.Provider
-      value={{ theme, setTheme, flashcardLevel, setFlashcardLevel, KANJI_API }}
+      value={{
+        theme,
+        setTheme,
+        flashcardLevel,
+        setFlashcardLevel,
+        KANJI_API,
+        kanjiArr,
+        setKanjiArr,
+        studyCardFlipped,
+        setStudyCardFlipped,
+      }}
     >
       <ThemeProvider theme={visualTheme}>
         <CssBaseline />

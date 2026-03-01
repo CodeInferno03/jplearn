@@ -14,3 +14,11 @@ export function shuffleArray(arr: Array<string>): Array<string> {
   }
   return arr;
 }
+
+export function areEqual(arr_1: Array<string | undefined>, arr_2: Array<string>) {
+  if (arr_1.length !== arr_2.length) return false;
+  const sorted_1 = arr_1.sort();
+  const sorted_2 = arr_2.sort();
+
+  return sorted_1.every((val, i) => val === sorted_2[i]);
+}

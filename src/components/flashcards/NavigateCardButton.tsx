@@ -1,8 +1,30 @@
 import * as React from "react";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
+import { GlobalContext } from "../../contexts/GlobalContextProvider";
+import { useNavigate } from "react-router-dom";
 
-function NavigateCardButton() {
+function NavigateCardButton({ onNext, finish }) {
+  const { studyCardFlipped } = React.useContext(GlobalContext)!;
+  const [hasBeenFlipped, setHasBeenFlipped] = React.useState<boolean>(false);
+  const navigate = useNavigate();
+
+  React.useEffect(() => {
+    if (studyCardFlipped) {
+      setHasBeenFlipped(true);
+    }
+  }, [studyCardFlipped]);
+
+  const nextAction = () => {
+    if (finish) {
+      sessionStorage.removeItem("flashcardIndex")
+      navigate("/flashcards");
+    } else {
+      setHasBeenFlipped(false);
+      onNext();
+    }
+  };
+
   return (
     <Box
       sx={{
@@ -10,20 +32,22 @@ function NavigateCardButton() {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        mt: 8,
+        mt: 3,
       }}
     >
       <Button
+        disabled={!hasBeenFlipped}
         variant="contained"
+        onClick={nextAction}
         sx={{
           width: "80%",
           display: "flex",
-          borderRadius: "2.5%",
+          borderRadius: "7.5px",
           bgcolor: "#0faada",
-          fontWeight: "bold"
+          fontWeight: "bold",
         }}
       >
-        Next Card
+        {finish ? "Finish" : "Next Card"}
       </Button>
     </Box>
   );

@@ -17,8 +17,9 @@ function Flashcards() {
     React.useContext(GlobalContext)!;
 
   const selectLevel = (event: SelectChangeEvent) => {
-    sessionStorage.setItem("kanjiLevel", event.target.value);
+    // sessionStorage.setItem("kanjiLevel", event.target.value);
     setFlashcardLevel(event.target.value);
+    sessionStorage.removeItem("flashcardIndex");
   };
 
   const flashcardLevels = [
