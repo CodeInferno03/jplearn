@@ -1,10 +1,11 @@
 import * as React from 'react';
 import Navbar from '../../components/global/Navbar';
+import Topbar from '../../components/global/Topbar';
 
 function MobileDictionaryPage() {
   return (
   <>
-    <div>Hello</div>
+    <Topbar title='Dictionary' />
     <Navbar />
   </>
   );

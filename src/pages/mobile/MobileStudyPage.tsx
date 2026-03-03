@@ -22,6 +22,8 @@ function MobileStudyPage() {
     setKanjiArr,
     studyCardFlipped,
     setStudyCardFlipped,
+    setLoading,
+    loading,
   } = React.useContext(GlobalContext)!;
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -31,7 +33,7 @@ function MobileStudyPage() {
     Number(savedIndex!) ?? 0,
   );
   const [currentKanjiData, setCurrentKanjiData] = React.useState<any>(null);
-  const [loading, setLoading] = React.useState<boolean>(false);
+  const [showBlankCard, setShowBlankCard] = React.useState<boolean>(false);
 
   React.useEffect(() => {
     setStudyCardFlipped(false);
@@ -49,8 +51,8 @@ function MobileStudyPage() {
 
     setFlashcardLevel(resolvedLevel);
 
-    if (existingLevel !== resolvedLevel) {
-      console.log("HERE");
+    if (existingLevel !== resolvedLevel || !kanjiArr.length) {
+      setLoading(true);
       sessionStorage.setItem("level", resolvedLevel);
 
       const url = `${KANJI_API}/kanji/${formatLevel(resolvedLevel)}`;
@@ -61,7 +63,8 @@ function MobileStudyPage() {
         .then((response) => {
           const data = response.data;
           if (!areEqual(kanjiArr, data)) setKanjiArr(shuffleArray(data));
-        });
+        })
+        .catch((err) => console.error(`Error: ${err}`));
     }
   }, [searchParams]);
 
@@ -72,18 +75,22 @@ function MobileStudyPage() {
     const currentKanji = kanjiArr[currentIndex];
     if (!currentKanji) return;
 
-    setLoading(true);
     axios
       .get(`${KANJI_API}/kanji/${currentKanji}`)
       .then((res) => {
         sessionStorage.setItem("flashcardIndex", `${currentIndex}`);
         setCurrentKanjiData(res.data);
       })
-      .finally(() => setLoading(false));
+      .catch((err) => console.error(`Error: ${err}`))
+      .finally(() => {
+        if (loading) setLoading(false);
+        setShowBlankCard(false);
+      });
   }, [currentIndex, kanjiArr]);
 
   const handleNextCard = () => {
     setCurrentIndex((prev) => prev + 1);
+    setShowBlankCard(true);
     setStudyCardFlipped(false);
   };
 
@@ -96,7 +103,10 @@ function MobileStudyPage() {
       />
       {currentKanjiData && (
         <>
-          <StudyFlashcard data={currentKanjiData} />
+          <StudyFlashcard
+            data={currentKanjiData}
+            showBlankCard={showBlankCard}
+          />
           <ProgressBar
             // progress={currentIndex / kanjiArr.length}
             current={currentIndex + 1}

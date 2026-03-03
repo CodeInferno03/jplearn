@@ -14,6 +14,8 @@ interface GlobalContextInterface {
   setKanjiArr: React.Dispatch<React.SetStateAction<Array<string | undefined>>>;
   studyCardFlipped: boolean;
   setStudyCardFlipped: React.Dispatch<React.SetStateAction<boolean>>;
+  loading: boolean;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 interface GlobalContextProviderProps {
@@ -53,7 +55,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   const [studyCardFlipped, setStudyCardFlipped] =
     React.useState<boolean>(false);
 
-  const BORDER_COLOR = (theme) => (theme === "dark" ? "#8C8C8C" : "#000");
+  const [loading, setLoading] = React.useState<boolean>(false);
 
   return (
     <GlobalContext.Provider
@@ -67,6 +69,8 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         setKanjiArr,
         studyCardFlipped,
         setStudyCardFlipped,
+        loading,
+        setLoading,
       }}
     >
       <ThemeProvider theme={visualTheme}>

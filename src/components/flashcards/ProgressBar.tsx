@@ -10,7 +10,7 @@ function ProgressBar({ current, total }) {
       sx={{
         width: "100%",
         alignItems: "center",
-        mt: 13,
+        mt: 4,
         px: 5,
       }}
     >
